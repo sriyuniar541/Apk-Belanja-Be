@@ -1,13 +1,13 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
-const { response } = require('../middleware/common');
-const  {create,findEmail} = require('../model/users')
-const bcrypt = require('bcryptjs');
-const { v4: uuidv4 } =  require('uuid');
-const {generateToken} = require ('../helpers/auth')
+const { response } = require('../middleware/common'); //untuk menghubungkan ke eror handling yang telah dibuat
+const  {create,findEmail} = require('../model/users') //untuk menguhungkan fungsion create dan findEmail
+const bcrypt = require('bcryptjs'); 
+const { v4: uuidv4 } =  require('uuid'); //membuat id unik
+const {generateToken} = require ('../helpers/auth') //membuat token
 
 
-const UsersController = {
+const UsersController = { 
     insert:async (req,res,next) => {
         let {rows:[users]} = await findEmail(req.body.email)
         console.log('role',req.params.role)

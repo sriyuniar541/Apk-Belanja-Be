@@ -27,6 +27,10 @@ const findEmail = (email) => {
     }))
 }
 
+// const selectDataUser = () => {
+//     return Pool.query(`SELECT * FROM users`); 
+// }
+
 
 
 module.exports = {create,findEmail}

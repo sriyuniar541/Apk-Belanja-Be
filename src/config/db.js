@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-//untuk menghubungkan ke databese postgres 
+//untuk menghubungkan ke databese postgres kemudian disimpan di env
 
 const { Pool} = require ('pg')
 const pool = new Pool ({

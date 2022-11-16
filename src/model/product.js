@@ -1,30 +1,53 @@
 const Pool =require ('./../config/db')
 
-const selectData = () => {
-    return Pool.query(`SELECT products.name,products.stock,products.price,categorys.categorys 
-    as categorys FROM products INNER JOIN categorys
-    ON products.categorys_id = categorys.id`); 
-}
 
-//get search,sort,pagination
-const selectDataSearch = (search) => {
-    return Pool.query(`SELECT * FROM products WHERE name LIKE '%${search}%'`);
-    //return Pool.query(`SELECT * FROM products`); 
-    //http://localhost:4000/product?search=pan
-}
+//get data biasa tanpa id categorys
+// const selectData = () => {
+//     return Pool.query(`SELECT * FROM products`); 
+// }
 
-const selectDataSort = (sortby,sort,page,limit) => {
+
+//get data
+const selectData = ({limit,offset,sort,sortby,search}) => {
+    console.log(limit,offset,sort,sortby)
+    return Pool.query(
+      `SELECT products.id,products.name,products.stock,  products.price, categorys.id as categorys, products.photo FROM products  JOIN categorys ON products.categorys_id = categorys.id WHERE (products.name) ILIKE ('%${search}%') 
+      ORDER BY products.${sortby} ${sort} LIMIT ${limit} OFFSET ${offset} `
+    );
+  };
+  
+  const selectDataDetail = (id) => {
+    return Pool.query(
+      `SELECT products.id,products.name,products.stock,  products.price, categorys.id as categorys, products.photo FROM products  JOIN categorys ON products.categorys_id = categorys.id WHERE products.id='${id}' `
+    );
+  };
+
+
+// get search,sort,pagination
+// const selectData = ({limit,offset,sort,sortby,search}) => {
+//     console.log(limit,offset,sort,sortby)
+//     return Pool.query(
+//       `SELECT products.id,products.name,products.stock,products.price, categorys.name as categorys,products.photo FROM  products JOIN categorys ON products.categorys_id = categorys.id WHERE (products.name) ILIKE ('%${search}%') ORDER BY products.${sortby} ${sort} LIMIT ${limit} OFFSET ${offset} `
+//     );
+//   };
+
+ 
+// const selectData = ({sortby,sort,limit,page,search,offset}) => {
+//     // return Pool.query(`SELECT products.id,products.name,products.stock,products.price,categorys.name as categorys,products.photo FROM products JOIN categorys ON products.categorys_id = categorys.id WHERE (products.name) ILIKE ('%${search}%') ORDER BY products.${sortby} ${sort} LIMIT ${limit} OFFSET ${offset} `);
+
+
+//     return Pool.query(`SELECT products.id,products.name,products.stock,  products.price, categorys.name as categorys, products.photo FROM products  JOIN category ON products.categorys_id = categorys.id WHERE (products.name) ILIKE ('%${search}%') ORDER BY products.${sortby} ${sort} LIMIT ${limit} OFFSET ${offset} `)
+//     // return Pool.query(`SELECT * FROM products`); 
+//     //http://localhost:4000/product?sortby=${sortBy}&sort=${sort}&search=${inputData.search}
+//  }
+
+
+const sortData = (sortby,sort,page,limit) => {
     return Pool.query(`SELECT * FROM products ORDER BY ${sortby} ${sort} LIMIT ${limit} OFFSET ${(page-1)*limit}`); 
     //http://localhost:4000/product?sortby=price&sort=desc&page=1&limit=10
     //return Pool.query(`SELECT * FROM products`); 
 }
 
-const selectDataDetail = (id) => {
-    return Pool.query(`SELECT products.name,products.stock,products.price,categorys.categorys 
-    as categorys FROM products INNER JOIN categorys
-    ON products.categorys_id = categorys.id WHERE products.id='${id}'`);   
-}
- 
 const insertData = (data) => {
     const {name,stock,price,categorys_id,photo} = data;
     console.log(data)
@@ -41,4 +64,5 @@ const deleteData = id => {
     return Pool.query(`DELETE FROM products where id ='${id}'`);
 }
 
-module.exports = {selectData,selectDataSearch,selectDataSort, selectDataDetail, insertData, deleteData, updateData} 
+module.exports = { insertData, deleteData,selectDataDetail, updateData,selectData,sortData} 
+//module.exports = {selectData,selectDataSearch,selectDataSort, selectDataDetail, insertData, deleteData, updateData} 

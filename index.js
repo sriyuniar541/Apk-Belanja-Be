@@ -33,7 +33,7 @@ const port = process.env.PORT
 app.use(bodyParser.json())
 app.use(morgan('dev'))
 app.use(cors())
-app.use(helmet())
+app.use(helmet.crossOriginResourcePolicy({policy:'cross-origin'})) //untuk m
 app.use(xss())
 
 //main router
