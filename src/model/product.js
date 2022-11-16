@@ -42,11 +42,11 @@ const selectData = ({limit,offset,sort,sortby,search}) => {
 //  }
 
 
-const sortData = (sortby,sort,page,limit) => {
-    return Pool.query(`SELECT * FROM products ORDER BY ${sortby} ${sort} LIMIT ${limit} OFFSET ${(page-1)*limit}`); 
-    //http://localhost:4000/product?sortby=price&sort=desc&page=1&limit=10
-    //return Pool.query(`SELECT * FROM products`); 
-}
+// const sortData = (sortby,sort,page,limit) => {
+//     return Pool.query(`SELECT * FROM products ORDER BY ${sortby} ${sort} LIMIT ${limit} OFFSET ${(page-1)*limit}`); 
+//     //http://localhost:4000/product?sortby=price&sort=desc&page=1&limit=10
+//     //return Pool.query(`SELECT * FROM products`); 
+// }
 
 const insertData = (data) => {
     const {name,stock,price,categorys_id,photo} = data;
@@ -64,5 +64,5 @@ const deleteData = id => {
     return Pool.query(`DELETE FROM products where id ='${id}'`);
 }
 
-module.exports = { insertData, deleteData,selectDataDetail, updateData,selectData,sortData} 
+module.exports = { insertData, deleteData,selectDataDetail, updateData,selectData} 
 //module.exports = {selectData,selectDataSearch,selectDataSort, selectDataDetail, insertData, deleteData, updateData} 
