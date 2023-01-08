@@ -16,6 +16,8 @@ CREATE TABLE users(
     role VARCHAR
 );
 
+ALTER TABLE users ADD adress VARCHAR(255);
+
 CREATE TABLE payment_status(
     id SERIAL PRIMARY KEY,
     name VARCHAR NOT NULL
@@ -66,3 +68,47 @@ role VARCHAR
 INSERT INTO users(id,email,password,fullName,role) VALUES('1','sri2000@gmail.com','12345','sri-yuniar','admin');
 SELECT * FROM users WHERE email='namaemail@gmail.com';
 
+
+CREATE TABLE addProducts(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR NOT NULL,
+    stock INT,
+    price INT,
+    categorys_id INT REFERENCES categorys(id)
+);
+
+
+CREATE TABLE myBag(
+    id SERIAL PRIMARY KEY,
+    products_id INT REFERENCES products(id),
+    categorys_id INT REFERENCES categorys(id),
+    user_id VARCHAR(255) REFERENCES users(id)
+);
+ALTER TABLE myBag ADD count INT;
+CREATE TABLE checkout(
+    id SERIAL PRIMARY KEY,
+    products_id INT REFERENCES products(id),
+    categorys_id INT REFERENCES categorys(id),
+    user_id VARCHAR(255) REFERENCES users(id),
+    status INT
+);
+ALTER TABLE checkout ADD statusPayment INT;
+ALTER TABLE checkout ADD count INT;
+SELECT checkout.id,products.id as products_id,products.name as products_name,products.price as products_price,products.stock as products_stock,categorys.categorys as categorys,users.id as user_id,users.fullname as user_name,checkout.status,checkout.statusPayment,checkout.count FROM checkout
+INNER JOIN products ON checkout.products_id = products.id
+INNER JOIN categorys ON checkout.categorys_id = categorys.id
+INNER JOIN users ON checkout.user_id = users.id;
+
+SELECT myBag.id,products.id as products_id,products.name as products_name,products.price as products_price,products.stock as products_stock,categorys.categorys as categorys,users.id as user_id,users.fullname as user_name,myBag.count FROM mybag
+INNER JOIN products ON myBag.products_id = products.id
+INNER JOIN categorys ON myBag.categorys_id = categorys.id
+INNER JOIN users ON myBag.user_id = users.id;
+
+
+ALTER TABLE addProducts ADD photo VARCHAR(255);
+ALTER TABLE addProducts ADD user_id VARCHAR(255) REFERENCES users(id);
+
+SELECT addProducts.name,addProducts.stock,addProducts.price,categorys.categorys as categorys,users.fullname as user_id
+FROM addProducts 
+INNER JOIN categorys ON addProducts.categorys_id = categorys.id
+INNER JOIN users ON addProducts.user_id = users.id;

@@ -14,12 +14,16 @@ const xss = require('xss-clean')
 const multer = require('multer')
 
 
+
 //mengambil file product,category,transaction dari routes
 //const product = require('./src/routes/product')
 const categorys = require('./src/routes/categorys')
 const transactions = require('./src/routes/transactions')
 const users = require('./src/routes/users')
+const addProduct = require('./src/routes/addProduct')
+const checkout = require('./src/routes/checkout')
 const pool = require('./src/config/db');
+
 
 
 
@@ -36,6 +40,7 @@ app.use(cors())
 app.use(helmet.crossOriginResourcePolicy({policy:'cross-origin'})) //untuk m
 app.use(xss())
 
+
 //main router
 app.use('/',mainRouter)
 app.use('/img',express.static('./upload'))
@@ -44,6 +49,8 @@ app.use('/img',express.static('./upload'))
 //app.use('/product/',product)
 app.use('/categorys',categorys)
 app.use('/transactions',transactions)
+app.use('/addProduct',addProduct)
+app.use('/checkout',checkout)
 
 
 //(post)

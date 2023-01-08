@@ -8,28 +8,28 @@ const Pool =require ('./../config/db')
 
 
 //get data
-const selectData = ({limit,offset,sort,sortby,search}) => {
-    console.log(limit,offset,sort,sortby)
-    return Pool.query(
-      `SELECT products.id,products.name,products.stock,  products.price, categorys.id as categorys, products.photo FROM products  JOIN categorys ON products.categorys_id = categorys.id WHERE (products.name) ILIKE ('%${search}%') 
-      ORDER BY products.${sortby} ${sort} LIMIT ${limit} OFFSET ${offset} `
-    );
-  };
+// const selectData = ({limit,offset,sort,sortby,search}) => {
+//     console.log(limit,offset,sort,sortby)
+//     return Pool.query(
+//       `SELECT products.id,products.name,products.stock,  products.price, categorys.id as categorys, products.photo FROM products  JOIN categorys ON products.categorys_id = categorys.id WHERE (products.name) ILIKE ('%${search}%') 
+//       ORDER BY products.${sortby} ${sort} LIMIT ${limit} OFFSET ${offset} `
+//     );
+//   };
   
   const selectDataDetail = (id) => {
     return Pool.query(
-      `SELECT products.id,products.name,products.stock,  products.price, categorys.id as categorys, products.photo FROM products  JOIN categorys ON products.categorys_id = categorys.id WHERE products.id='${id}' `
+      `SELECT products.id,products.name,products.stock,products.price,products.categorys_id as categorys_id,products.photo FROM products INNER JOIN categorys ON products.categorys_id = categorys.id WHERE products.id='${id}' `
     );
   };
 
 
 // get search,sort,pagination
-// const selectData = ({limit,offset,sort,sortby,search}) => {
-//     console.log(limit,offset,sort,sortby)
-//     return Pool.query(
-//       `SELECT products.id,products.name,products.stock,products.price, categorys.name as categorys,products.photo FROM  products JOIN categorys ON products.categorys_id = categorys.id WHERE (products.name) ILIKE ('%${search}%') ORDER BY products.${sortby} ${sort} LIMIT ${limit} OFFSET ${offset} `
-//     );
-//   };
+const selectData = ({limit,offset,sort,sortby,search}) => {
+    console.log(limit,offset,sort,sortby)
+    return Pool.query(
+      `SELECT products.id,products.name,products.stock,products.price, categorys.categorys as categorys,products.photo FROM  products JOIN categorys ON products.categorys_id = categorys.id WHERE (products.name) ILIKE ('%${search}%') ORDER BY products.${sortby} ${sort} LIMIT ${limit} OFFSET ${offset} `
+    );
+  };
 
  
 // const selectData = ({sortby,sort,limit,page,search,offset}) => {
