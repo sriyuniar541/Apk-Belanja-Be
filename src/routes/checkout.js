@@ -11,15 +11,16 @@ const uploade = multer()
 //const {hitCache,clearCache} = require('../middleware/redis') 
 
  
-routerCheckout.get("/",checkoutController.get);
+routerCheckout.get("/All",checkoutController.getAll);
+routerCheckout.get("/",protect,checkoutController.get);
 routerCheckout.get("/:id",checkoutController.getDetail);
-routerCheckout.post("/", uploade.array(''),checkoutController.insert)
+routerCheckout.post("/",protect,uploade.array(''),checkoutController.insert)
 //routerCheckout.post('/',protect,validasiStock,checkoutController.insert)
 // routerCheckout.put('/:id',upload.single('photo'),checkoutController.update)
 //routerCheckout.put('/:id',upload.single('photo'),clearCache,checkoutController.update)
-routerCheckout.put('/:id',checkoutController.update)
-routerCheckout.put('/payment/:id',checkoutController.updateStatusPaymentAll)
-routerCheckout.delete('/:id',checkoutController.delete)
+routerCheckout.put('/:user_id',protect,checkoutController.update)
+routerCheckout.put('/payment/:user_id',protect,checkoutController.updateStatusPaymentAll)
+routerCheckout.delete('/:id',protect,checkoutController.delete)
 
 
 

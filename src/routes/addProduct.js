@@ -5,18 +5,16 @@ const {ProductController} = require('./../controller/addProduct')
 const {validasiStock} = require('../helpers/stock') 
 const {protect,requireAdmin,roleUser} = require('../middleware/auth') 
 const {upload}  = require('../middleware/upload') 
-//const upload  = require('../middleware/upload') 
-//const {hitCache,clearCache} = require('../middleware/redis') 
-
+const multer =  require('multer')
+const uploade = multer()
  
-routerAdd.get("/",ProductController.getProduct);
+
+routerAdd.get("/All",ProductController.getProductAll); 
+routerAdd.get("/",protect,ProductController.getProduct);
 routerAdd.get("/:id",ProductController.getProductDetail);
-routerAdd.post("/",upload.single('photo'), ProductController.insert)
-//routerAdd.post('/',protect,validasiStock,ProductController.insert)
-// routerAdd.put('/:id',upload.single('photo'),ProductController.update)
-//routerAdd.put('/:id',upload.single('photo'),clearCache,ProductController.update)
-//routerAdd.put('/:id',protect,clearCache,ProductController.update)
-routerAdd.delete('/:id',ProductController.delete)
+routerAdd.post("/",protect,uploade.array(''),ProductController.insert)
+routerAdd.delete('/:id',protect,ProductController.delete)
+routerAdd.delete('/',protect,ProductController.deleteByUser)
 
 
 

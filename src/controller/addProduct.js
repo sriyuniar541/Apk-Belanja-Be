@@ -12,6 +12,30 @@ const ProductController = {
         .then(result => response(res,200,true,result.rows,'delete data sukses'))
         .catch(err => response(res,401,false,err,'delete data fail'))
     },
+
+    deleteByUser : (req,res,next) => {
+        const user_id = req.payload.id
+        ModelProduct.deleteDataAll(user_id)
+        .then(result => response(res,200,true,result.rows,'delete data sukses'))
+        .catch(err => response(res,401,false,err,'delete data fail'))
+    },
+
+    getProductAll: async(req, res, next) => {
+        try {
+        const page = Number(req.query.page) || 1 //menerima query(gabungan paramams yang memiliki nilai) page
+        const limit = Number(req.query.limit) || 10 //menerima query limit
+        const offset = (page - 1) * limit 
+        const sortby = req.query.sortby || "name" //menerima query sortby
+        const sort = req.query.sort || "ASC"
+        const search = req.query.search || '';
+        const result = await ModelProduct.selectDataAll({limit,offset,sort,sortby,search})
+        response(res, 200, true, result.rows, "get data success")
+        } 
+        catch(err){
+          console.log(err)
+          response(res, 404, false, err, "get data fail");
+        }},
+
     getProduct: async(req, res, next) => {
         try {
         const page = Number(req.query.page) || 1 //menerima query(gabungan paramams yang memiliki nilai) page
@@ -20,7 +44,8 @@ const ProductController = {
         const sortby = req.query.sortby || "name" //menerima query sortby
         const sort = req.query.sort || "ASC"
         const search = req.query.search || '';
-        const result = await ModelProduct.selectData({limit,offset,sort,sortby,search})
+        const user_id = req.payload.id
+        const result = await ModelProduct.selectData({limit,offset,sort,sortby,search,user_id})
         response(res, 200, true, result.rows, "get data success")
         } 
         catch(err){
