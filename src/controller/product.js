@@ -1,58 +1,78 @@
-/* eslint-disable no-unexpected-multiline */
-/* eslint-disable no-undef */
-/* eslint-disable no-unused-vars */
-const { response } = require('../middleware/common'); //untuk menangkap error 
-const  ModelProduct = require('./../model/product'); //menyambungkan ke model/product
-const Pool = require ('./../config/db'); //untuk terhubung ke database
+const { response } = require('../middleware/common'); 
+const  ModelProduct = require('./../model/product'); 
+const Pool = require ('./../config/db'); 
 // const client = require ('../config/redis'); //redis
-const { stringify } = require('uuid'); //untuk membuat id unik
+const { stringify } = require('uuid'); 
 
 
-//untuk control
+
 const ProductController = {
-    //untuk put diambil dari file index.js
-    update : (req,res,next) => {
-        const Port = process.env.PORT //env
-        const Host = process.env.HOST //env
+    updateProduct : (req,res,next) => {
+        const Port = process.env.PORT 
+        const Host = process.env.HOST
         const photo = req.file.filename 
         const uri = `http://${Host}:${Port}/img/${photo}`
         req.body.photo = uri
         req.body.stock = parseInt(req.body.stock) //parseInt untuk mengubah string ke integer(bilangan bulat)
         req.body.price = parseInt(req.body.price)
         req.body.categorys_id = parseInt(req.body.categorys_id)
+        req.body.users_id = req.payload.id
         
         ModelProduct.updateData(req.params.id,req.body)
         .then(result => response(res,200,true,result.rows,'update data sukses'))
         .catch(err => response(res,401,false,err,'update data fail'))
     },
-    //delete diambil dari file index.js
+
+    update : (req,res,next) => {
+        ModelProduct.active(req.params.id)
+        .then(result => response(res,200,true,result.rows,'update data sukses'))
+        .catch(err => response(res,401,false,err,'update data fail'))
+    },
+
+    updateNot : (req,res,next) => {
+        ModelProduct.notActive(req.params.id)
+        .then(result => response(res,200,true,result.rows,'update data sukses'))
+        .catch(err => response(res,401,false,err,'update data fail'))
+    },
+    
     delete : (req,res,next) => {
         ModelProduct.deleteData(req.params.id)
         .then(result => response(res,200,true,result.rows,'delete data sukses'))
         .catch(err => response(res,401,false,err,'delete data fail'))
     },
 
-    // getProduct : (req,res,next) => { 
-    //     ModelProduct.selectData()
-    //     .then(result => response(res,200,true,result.rows,'get data sukses'))
-    //     .catch(err => response(res,401,false,err,'get data fail'))
-    // },
-
     getProduct: async(req, res, next) => {
         try {
         const page = Number(req.query.page) || 1 //menerima query(gabungan paramams yang memiliki nilai) page
-        const limit = Number(req.query.limit) || 10 //menerima query limit
+        const limit = Number(req.query.limit) || 20 //menerima query limit
         const offset = (page - 1) * limit 
         const sortby = req.query.sortby || "name" //menerima query sortby
         const sort = req.query.sort || "ASC"
         const search = req.query.search || '';
-        const result = await ModelProduct.selectData({limit,offset,sort,sortby,search})
+        const result = await ModelProduct.selectData({limit,offset,sort,sortby,search,page })
         response(res, 200, true, result.rows, "get data success")
         } 
         catch(err){
           console.log(err)
           response(res, 404, false, err, "get data fail");
         }},
+
+    getProductUser: async(req, res, next) => {
+            try {
+            const page = Number(req.query.page) || 1 
+            const limit = Number(req.query.limit) || 10 
+            const offset = (page - 1) * limit 
+            const sortby = req.query.sortby || "name"
+            const sort = req.query.sort || "ASC"
+            const search = req.query.search || '';
+            const users_id = req.payload.id
+            const result = await ModelProduct.selectDataUser({limit,offset,sort,sortby,search,users_id})
+            response(res, 200, true, result.rows, "get data success")
+            } 
+            catch(err){
+              console.log(err)
+              response(res, 404, false, err.message, "get data fail");
+            }},
 
 
     getProductDetail: (req, res, next) => {
@@ -73,6 +93,7 @@ const ProductController = {
         req.body.stock = parseInt(req.body.stock)
         req.body.price = parseInt(req.body.price)
         req.body.categorys_id = parseInt(req.body.categorys_id)
+        req.body.users_id = req.payload.id
         
         ModelProduct.insertData(req.body) 
         .then(result => response(res,200,true,result.rows,'insert data sukses'))
@@ -80,6 +101,6 @@ const ProductController = {
     },
 }
 
-//untuk mengexport produk contol
+
 exports.ProductController = ProductController
 

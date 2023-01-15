@@ -10,15 +10,18 @@ const {upload}  = require('../middleware/upload')
 
  
 router.get("/",ProductController.getProduct);
+router.get("/user",protect,ProductController.getProductUser);
 router.get("/:id",ProductController.getProductDetail);
 //router.get('/',ProductController.getProduct)
 //router.get('/',ProductController.getProductSearch)
 //router.get('/:sort',ProductController.getProductSort)
 //router.get('/:id',protect,ProductController.getProductDetail)
 //router.get('/:id',protect,hitCache,ProductController.getProductDetail)
-router.post("/",upload.single('photo'), ProductController.insert)
+router.post("/",protect,upload.single('photo'), ProductController.insert)
 //router.post('/',protect,validasiStock,ProductController.insert)
-router.put('/:id',upload.single('photo'),ProductController.update)
+router.put('/:id',protect,upload.single('photo'),ProductController.updateProduct)
+router.put('/active/:id',protect,ProductController.update)
+router.put('/notActive/:id',protect,ProductController.updateNot)
 //router.put('/:id',upload.single('photo'),clearCache,ProductController.update)
 //router.put('/:id',protect,clearCache,ProductController.update)
 router.delete('/:id',ProductController.delete)

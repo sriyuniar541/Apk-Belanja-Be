@@ -1,45 +1,108 @@
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
 
-module.exports =async (email,subject,url) => {
-    try {
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            secure :true,
-            port : 465,
-            auth: {
-                user: process.env.EMAIL,
-                pass: process.env.PASSWORD_EMAIL
-            }
-        });
-        
-        const mailOptions = {
-            from: process.env.EMAIL,
-            to: 'sriyuniar86@gmail.com',
-            subject: 'sending OTP',
-            text: 'That was easy!'
-        };
-        
-        await transporter.sendMail({
 
-        
-            from : process.env.EMAIL,
-            to :email,
-            subject : subject,
-            html : `<h1>Email convirmation</h1>
-                    <h2>hello ${email}</h2>
-                    <p>thank you for join us, please confirm your email by dicking on the following link</p>
-                    <a href='${url}'> Clik here<a>
-                    atau masuk ke link ${url}
-                    </div>`
+let transporter = nodemailer.createTransport({
+	// service: "gmail",
+    host: "smtp.zoho.com",
+    secure: true,
+    port: 465,
+    auth: {
+		user: "noreply@pijarproject.site",
+		pass:  "yqJN1sCZcrWB"
+    },
+  });
+ 
+module.exports = (email, subject, verifUrl,fullname) => {
+	let mailOptions = {
+		from: "noreply@pijarproject.site",
+		to: email,
+		subject: `${subject} is your otp`,
+		text: `Hello ${fullname} \n Thank you for join us. Please copy your otp and verif  otp --${subject}--`
+	};
 
-        })
-        console.log('email sedning successfully')
-
-    }catch (error) {
-        console.log(error)
-        return error
-    }
-}
+	transporter.sendMail(mailOptions, function(err, data) {
+		if (err) {
+		  console.log("Error " + err);
+		  console.log("email not sent!");
+		} else {
+		  console.log("Email sent successfully");
+		  return "email sent successfully"
+		}
+	  });
+};
 
 
 
+//     user:'sriyuniar541@gmail.com',
+//     pass:'reakquaudqzwdctq'
+//   },
+// });
+
+// // let transporter = nodemailer.createTransport({
+// //     host: "smtp.zoho.com",
+// //     secure: true,
+// //     port: 465,
+// //     auth: {
+    //   user: "noreply@projectpijar.site",
+    //   pass:  "yqJN1sCZcrWB",
+      
+// //     },
+// //   });
+
+// module.exports = (email, subject, text) => {
+//   let mailOptions = {
+//     from: 'sriyuniar541@gmail.com',
+//     to: email,
+//     subject: subject,
+//     text: text,
+//   };
+
+//   transporter.sendMail(mailOptions, function (err, data) {
+//     if (err) {
+//       console.log("Error " + err);
+//       console.log("email not sent!");
+//     } else {
+//       console.log("Email sent successfully");
+//       return "email sent successfully";
+//     }
+//   });
+// };
+
+
+
+
+// let transporter = nodemailer.createTransport({
+//       host: "smtp.zoho.com",
+//     secure: true,
+//     port: 465,
+//     auth: {
+//       user: "noreply@projectpijar.site",
+//       pass:  "yqJN1sCZcrWB",
+      
+//     // },
+// //   });
+//   // service: 'gmail',
+//   // auth: {
+//   //   user: "noreply@projectpijar.site",
+//   //   pass:  "yqJN1sCZcrWB",
+//   },
+// });
+
+// module.exports = (email, subject, text) => {
+//   let mailOptions = {
+//     from: "noreply@projectpijar.site",
+//     to: email,
+//     subject: subject,
+//     text: text,
+//   };
+
+//   transporter.sendMail(mailOptions, function (err, data) {
+//     if (err) {
+//       console.log('Error ' + err);
+//       console.log('email not sent!');
+//     } else {
+//       console.log('Email sent successfully');
+//       return 'email sent successfully';
+//     }
+//   });
+// };

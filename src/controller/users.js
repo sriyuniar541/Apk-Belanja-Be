@@ -1,11 +1,11 @@
-/* eslint-disable no-undef */
-/* eslint-disable no-unused-vars */
-const { response } = require('../middleware/common'); //untuk menghubungkan ke eror handling yang telah dibuat
-const  {create,findEmail} = require('../model/users') //untuk menguhungkan fungsion create dan findEmail
+const { response } = require('../middleware/common'); 
+const  {create,findEmail,getUserId,updateProfile,verification} = require('../model/users') 
 const bcrypt = require('bcryptjs'); 
-const { v4: uuidv4 } =  require('uuid'); //membuat id unik
-const {generateToken} = require ('../helpers/auth') //membuat token
-const {email} = require ('../middleware/email')
+const { v4: uuidv4 } =  require('uuid'); 
+const {generateToken,generateRefreshToken} = require ('../helpers/auth') 
+const email = require ('../middleware/email')
+const Port = process.env.PORT 
+const Host = process.env.HOST
 
 const UsersController = { 
     insert:async (req,res,next) => {
@@ -16,24 +16,38 @@ const UsersController = {
         }
         let salt = bcrypt.genSaltSync(10);
         let password = bcrypt.hashSync(req.body.password)
+
+         //create otp
+         let digits = '0123456789'; 
+         let otp = '';
+         for (let i = 0; i < 6; i++) {
+             otp += digits[Math.floor(Math.random() * 10)]
+         }
+
         let data = {
             id : uuidv4(),
             email : req.body.email,
             password,
             fullname : req.body.fullname,
-            role :req.body.role
+            role :req.body.role,
+            otp
             //http://localhost:4000/users/register/toko
             
         }
-        try{
+        try {
             const result = await create(data)
-            if (result){
+            if (result) {
                 console.log(result)
-                response(res,200,true,true,'register succes') 
+                
+                const sendEmail = email(data.email, otp, `http://${Host}:${Port}/${email}/${otp}`,data.fullname)
+                if (sendEmail == 'email not send!') {
+                    return response(res, 404, false, null, 'register fail')
+                }
+                response(res, 200, true, { otp: data.otp }, 'register success please check your email to verif')
             }
-        } catch (err){
+        } catch (err) {
             console.log(err)
-            response(res,404,false,err,'register fail')
+            response(res, 404, false, err.message, 'register fail')
         }
     },
     
@@ -44,6 +58,9 @@ const UsersController = {
         if(!users){
             return response(res,404,false,null,'email not found')
         }
+        if(users.verif == 0){
+            return response(res, 404, false, null," email not verified")
+        }
         const password = req.body.password
         const validation = bcrypt.compareSync(password,users.password)
 
@@ -51,23 +68,67 @@ const UsersController = {
             return response(res,404,false,'wrong password')
         }
         delete users.password
+        delete users.otp
+        delete users.verif
         let payload = {
             id : users.id,
             email:users.email,
             role:users.role
         }
-        users.token = generateToken(payload)
+
+        let accessToken = generateToken(payload);
+        let refToken = generateRefreshToken(payload);
+
+        users.token = accessToken
         response(res,200,true,users,'login succes')
+        users.refreshToken = refToken;
         //http://localhost:4000/users/login
     },
-    email : async (req,res,next) => {
-        try{
-            const sendEmail = await email(req.params.email,'sriyuniar86@gmail.com','kode OTP','https://localhost:3000/product')
-            response(res,200,true,sendEmail,'send email succes')
-        } catch (err) {
-            response(res,404,false,'send email fail ')
+
+    otp: async (req, res, next) => {
+        let { rows: [users] } = await findEmail(req.body.email)
+        if (!users) {
+            return response(res, 404, false,null, 'email not found')
         }
-    }
+        if (users.otp == req.body.otp) {
+            const result = await verification(req.body.email)
+            return response(res, 200, true, result, 'email succes')
+        }
+        return response(res, 404, false,null, 'wrong otp please check your email')
+    } ,
+
+    getUser : async (req,res,next) => {
+        try{
+            let id = req.params.id
+            const result = await getUserId(id)
+            response(res,200,true,result.rows,'get user success')
+        } catch (err) {
+            response(res,404,err.message,'get user fail ')
+        }
+    },
+
+    UpdateUser : async (req,res,next) => {
+        try{
+            const Port = process.env.PORT //env
+            const Host = process.env.HOST //env
+            const photo = req.file.filename 
+            const uri = `http://${Host}:${Port}/img/${photo}`
+            const {email,fullname,gender,phoneNumber,adress} = req.body
+            const data = {
+                email,
+                fullname,
+                adress,
+                photo : uri,
+                gender,
+                phoneNumber
+            }
+            const result = await updateProfile(req.params.id,data)
+            console.log(data)
+            response(res,200,true,result.rows,'update user success')
+        } catch (err) {
+            response(res,404,err,'update user fail ')
+        }
+    },
 }
 
 exports.UsersController = UsersController 

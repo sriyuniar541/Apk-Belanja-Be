@@ -7,6 +7,10 @@ CREATE TABLE products(
     price INT,
     categorys_id INT REFERENCES categorys(id)
 );
+ALTER TABLE products ADD active INT;
+SELECT products.id,products.name,products.stock,products.price, categorys.categorys as categorys,products.photo,users.id as users_id FROM  products 
+INNER JOIN categorys ON products.categorys_id = categorys.id
+INNER JOIN users ON products.users_id = users.id;
 
 CREATE TABLE users(
     id VARCHAR PRIMARY KEY,
@@ -16,7 +20,11 @@ CREATE TABLE users(
     role VARCHAR
 );
 
-ALTER TABLE users ADD adress VARCHAR(255);
+
+
+ALTER TABLE users ADD photo VARCHAR(255);
+ALTER TABLE users ADD phoneNumber VARCHAR(255);
+
 
 CREATE TABLE payment_status(
     id SERIAL PRIMARY KEY,
@@ -65,6 +73,7 @@ fullName VARCHAR,
 role VARCHAR
 );
 
+
 INSERT INTO users(id,email,password,fullName,role) VALUES('1','sri2000@gmail.com','12345','sri-yuniar','admin');
 SELECT * FROM users WHERE email='namaemail@gmail.com';
 
@@ -84,7 +93,7 @@ CREATE TABLE myBag(
     categorys_id INT REFERENCES categorys(id),
     user_id VARCHAR(255) REFERENCES users(id)
 );
-ALTER TABLE myBag ADD count INT;
+ALTER TABLE myBag ADD statusOrder VARCHAR;
 CREATE TABLE checkout(
     id SERIAL PRIMARY KEY,
     products_id INT REFERENCES products(id),
@@ -92,9 +101,9 @@ CREATE TABLE checkout(
     user_id VARCHAR(255) REFERENCES users(id),
     status INT
 );
-ALTER TABLE checkout ADD statusPayment INT;
+ALTER TABLE checkout ADD user_idToko VARCHAR REFERENCES products(users_id);
 ALTER TABLE checkout ADD count INT;
-SELECT checkout.id,products.id as products_id,products.name as products_name,products.price as products_price,products.stock as products_stock,categorys.categorys as categorys,users.id as user_id,users.fullname as user_name,checkout.status,checkout.statusPayment,checkout.count FROM checkout
+SELECT checkout.id,products.id as products_id,products.name as products_name,products.users_id as user_idtoko,products.price as products_price,products.stock as products_stock,categorys.categorys as categorys,users.id as user_id,users.fullname as user_name,checkout.status,checkout.statusPayment,checkout.count FROM checkout
 INNER JOIN products ON checkout.products_id = products.id
 INNER JOIN categorys ON checkout.categorys_id = categorys.id
 INNER JOIN users ON checkout.user_id = users.id;

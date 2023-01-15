@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 const { response } = require('../middleware/common');
 const  ModelCategory = require('../model/categorys')
+const { v4: uuidv4 } =  require('uuid'); 
 
 //untuk control
 const CategoryController = {
@@ -27,6 +28,7 @@ const CategoryController = {
         ModelCategory.insertDataCategory(req.body)
         .then(result => response(res,200,true,result.rows,'insert data sukses'))
         .catch(err => response(res,401,false,err,'insert data fail'))
+        console.log(req.body)
     },
 }
 

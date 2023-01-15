@@ -5,8 +5,9 @@ const selectDataCategory = () => {
 }
 
 const insertDataCategory = (data) => {
-    const {id,categorys} = data;
-    return Pool.query(`INSERT INTO categorys(id,categorys) VALUES (${id},'${categorys}')`);
+    console.log(data)
+    const {categorys} = data;
+    return Pool.query(`INSERT INTO categorys(categorys) VALUES ('${categorys}')`);
 }
 
 const updateDataCategory = (id,data) => {

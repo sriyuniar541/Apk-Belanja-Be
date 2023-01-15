@@ -10,11 +10,14 @@ const uploade = multer()
  
 
 routerAdd.get("/All",ProductController.getProductAll); 
+routerAdd.get("/order",ProductController.getProductOrder); 
 routerAdd.get("/",protect,ProductController.getProduct);
 routerAdd.get("/:id",ProductController.getProductDetail);
 routerAdd.post("/",protect,uploade.array(''),ProductController.insert)
 routerAdd.delete('/:id',protect,ProductController.delete)
 routerAdd.delete('/',protect,ProductController.deleteByUser)
+routerAdd.put('/updateStatus',protect,ProductController.updateStatus)
+routerAdd.put('/updateDelevery/:id',protect,ProductController.updateStatusDelivery)
 
 
 
