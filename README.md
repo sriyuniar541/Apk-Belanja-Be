@@ -604,7 +604,7 @@ Response 200
   "success": true,
   "statusCode": 200,
   "data": [],
-  "message": "insert data sukses"
+  "message": "update data sukses"
 }  
 ```
 
@@ -638,7 +638,7 @@ Response 200
   "success": true,
   "statusCode": 200,
   "data": [],
-  "message": "delete data sukses"
+  "message": "insert data sukses"
 }  
 ```
 
