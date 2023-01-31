@@ -600,7 +600,12 @@ Field body form
 Response 200
 
 ```json
-===belum ada
+{
+  "success": true,
+  "statusCode": 200,
+  "data": [],
+  "message": "insert data sukses"
+}  
 ```
 
 #### Insert Product
@@ -629,7 +634,12 @@ Field body form
 Response 200
 
 ```json
-===belum ada
+{
+  "success": true,
+  "statusCode": 200,
+  "data": [],
+  "message": "delete data sukses"
+}  
 ```
 
 #### Update status non active Product
