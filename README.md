@@ -176,7 +176,7 @@ Response 200
     "role": "toko",
     "adress": "null",
     "photo": "null",
-    "gender": "null",
+    "gender": "null", 
     "phonenumber": "null",
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQ3M2U4YTJhLTNlNjYtNGY2MS1iNWE1LWY4MDY4MWQ3YWEwZSIsImVtYWlsIjoic3JpeXVuaWFyODY2QGdtYWlsLmNvbSIsInJvbGUiOiJ0b2tvIiwiaWF0IjoxNjc1MTI2MTY5LCJleHAiOjE2NzUxMjk3Njl9.hk5BFLO2A8RyeBWP_C8-uGaVHTGHsYF5UT_0QJyt4xk"
   },
