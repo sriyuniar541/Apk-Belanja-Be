@@ -11,7 +11,7 @@
     <a href="https://github.com/sriyuniar541/Apk-Belanja-Be"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="======link deploy be disini======">View Demo</a>
+    <a href="https://light-clam-overalls.cyclic.app/">View Demo</a>
   </p>
 </p>
 
@@ -85,7 +85,7 @@ Start the server
 API deploy 
 
 ```bash
-====link deploy be disini======
+https://light-clam-overalls.cyclic.app/
 ```
 
 ## API Reference - Auth
@@ -1279,7 +1279,7 @@ Response 200
 
 ## Related Project
 * [`Backend Project Belanja `](https://github.com/sriyuniar541/Apk-Belanja-Be)
-* [`REST API Telegram`](====link deploy be here====)
+* [`REST API Telegram`](https://light-clam-overalls.cyclic.app/)
 
 ## Contact
   * Sri Yuniar [@sriyuniar541](https://github.com/sriyuniar541)
