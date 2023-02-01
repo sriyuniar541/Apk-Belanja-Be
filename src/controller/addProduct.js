@@ -88,7 +88,8 @@ const ProductController = {
         
         ModelProduct.insertData(req.body) 
         .then(result => response(res,200,true,result.rows,'insert data sukses'))
-        .catch(err => response(res,401,false,err,'insert data fail'))
+        .catch(err => response(res,401,false,err.message,'insert data fail'))
+       
     },
 
     updateStatus : (req,res,next) => {

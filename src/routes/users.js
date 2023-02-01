@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const {UsersController}= require('./../controller/users')
 const {role} = require('../middleware/auth')
-const {upload}  = require('../middleware/upload') 
+const upload  = require('../middleware/upload') 
 
 
 router.post('/register/:role',role,UsersController.insert)

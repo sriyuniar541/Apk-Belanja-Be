@@ -9,7 +9,7 @@ const multer =  require('multer')
 const uploade = multer()
  
 
-routerAdd.get("/All",ProductController.getProductAll); 
+routerAdd.get("/All",ProductController.getProductAll);
 routerAdd.get("/order",ProductController.getProductOrder); 
 routerAdd.get("/",protect,ProductController.getProduct);
 routerAdd.get("/:id",ProductController.getProductDetail);

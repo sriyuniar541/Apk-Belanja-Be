@@ -4,7 +4,7 @@ const router = express.Router()
 const {ProductController} = require('./../controller/product')
 const {validasiStock} = require('../helpers/stock') 
 const {protect,requireAdmin,roleUser} = require('../middleware/auth') 
-const {upload}  = require('../middleware/upload') 
+const upload  = require('../middleware/upload') 
 //const upload  = require('../middleware/upload') 
 //const {hitCache,clearCache} = require('../middleware/redis') 
 

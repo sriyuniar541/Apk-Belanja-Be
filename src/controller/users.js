@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } =  require('uuid'); 
 const {generateToken,generateRefreshToken} = require ('../helpers/auth') 
 const email = require ('../middleware/email')
+const cloudinary = require('../config/cloudinary');
 const Port = process.env.PORT 
 const Host = process.env.HOST
 
@@ -109,24 +110,31 @@ const UsersController = {
 
     UpdateUser : async (req,res,next) => {
         try{
-            const Port = process.env.PORT //env
-            const Host = process.env.HOST //env
-            const photo = req.file.filename 
-            const uri = `http://${Host}:${Port}/img/${photo}`
-            const {email,fullname,gender,phoneNumber,adress} = req.body
+        
+            const {email,fullname,gender,phonenumber,adress} = req.body
             const data = {
                 email,
                 fullname,
                 adress,
-                photo : uri,
                 gender,
-                phoneNumber
+                phonenumber
             }
+
+            if (req.file) {
+                const image = await cloudinary.uploader.upload(req.file.path, {
+                  folder: 'telegram',
+                });
+        
+                data.photo = image.url;
+              } else {
+                data.photo = users.photo;
+              }
+
             const result = await updateProfile(req.params.id,data)
             console.log(data)
             response(res,200,true,result.rows,'update user success')
         } catch (err) {
-            response(res,404,err,'update user fail ')
+            response(res,404,err.message,'update user fail ')
         }
     },
 }

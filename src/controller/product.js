@@ -3,26 +3,36 @@ const  ModelProduct = require('./../model/product');
 const Pool = require ('./../config/db'); 
 // const client = require ('../config/redis'); //redis
 const { stringify } = require('uuid'); 
+const cloudinary = require('../config/cloudinary');
 
 
 
 const ProductController = {
-    updateProduct : (req,res,next) => {
-        const Port = process.env.PORT 
-        const Host = process.env.HOST
-        const photo = req.file.filename 
-        const uri = `http://${Host}:${Port}/img/${photo}`
-        req.body.photo = uri
-        req.body.stock = parseInt(req.body.stock) //parseInt untuk mengubah string ke integer(bilangan bulat)
-        req.body.price = parseInt(req.body.price)
-        req.body.categorys_id = parseInt(req.body.categorys_id)
-        req.body.users_id = req.payload.id
-        
-        ModelProduct.updateData(req.params.id,req.body)
-        .then(result => response(res,200,true,result.rows,'update data sukses'))
-        .catch(err => response(res,401,false,err,'update data fail'))
-    },
+    updateProduct : async (req,res,next) => {
+        try{
+            req.body.stock = parseInt(req.body.stock) 
+            req.body.price = parseInt(req.body.price)
+            req.body.categorys_id = parseInt(req.body.categorys_id)
+            req.body.users_id = req.payload.id
 
+            if (req.file) {
+                const image = await cloudinary.uploader.upload(req.file.path, {
+                  folder: 'belanja',
+                });
+        
+                req.body.photo = image.url;
+              } else {
+                req.body.photo = users.photo;
+              }
+
+            const result = await ModelProduct.updateData(req.params.id,req.body)
+            console.log(req.body)
+            response(res,200,true,result.rows,'update product success')
+        } catch (err) {
+            response(res,404,err.message,'update product fail ')
+        }
+    },
+    
     update : (req,res,next) => {
         ModelProduct.active(req.params.id)
         .then(result => response(res,200,true,result.rows,'update data sukses'))
@@ -74,7 +84,6 @@ const ProductController = {
               response(res, 404, false, err.message, "get data fail");
             }},
 
-
     getProductDetail: (req, res, next) => {
         ModelProduct.selectDataDetail(req.params.id) //menerima params id
         .then((result) => {
@@ -83,22 +92,31 @@ const ProductController = {
         })  
         },
     
-  
-     insert : (req,res,next) => {   
-        const Port = process.env.PORT //env
-        const Host = process.env.HOST //env
-        const photo = req.file.filename //multer
-        const uri = `http://${Host}:${Port}/img/${photo}`
-        req.body.photo = uri
-        req.body.stock = parseInt(req.body.stock)
-        req.body.price = parseInt(req.body.price)
-        req.body.categorys_id = parseInt(req.body.categorys_id)
-        req.body.users_id = req.payload.id
-        
-        ModelProduct.insertData(req.body) 
-        .then(result => response(res,200,true,result.rows,'insert data sukses'))
-        .catch(err => response(res,401,false,err,'insert data fail'))
-    },
+
+    insert : async (req,res,next) => {
+      try{
+          req.body.stock = parseInt(req.body.stock) 
+          req.body.price = parseInt(req.body.price)
+          req.body.categorys_id = parseInt(req.body.categorys_id)
+          req.body.users_id = req.payload.id
+
+          if (req.file) {
+              const image = await cloudinary.uploader.upload(req.file.path, {
+                folder: 'belanja',
+              });
+      
+              req.body.photo = image.url;
+            } else {
+              req.body.photo = users.photo;
+            }
+
+          const result = await ModelProduct.insertData(req.body)
+          console.log(req.body)
+          response(res,200,true,result.rows,'insert product success')
+      } catch (err) {
+          response(res,404,err.message,'insert product fail ')
+      }
+  },
 }
 
 

@@ -52,11 +52,9 @@ const getUserId = (id) => {
 
 const updateProfile = (id,data) => {
     console.log(data)
-    const {email,fullname,adress,photo,gender,phoneNumber} = data
+    const {email,fullname,adress,photo,gender,phonenumber} = data
     return new Promise ((resolve,reject)=>
-    // return Pool.query(`UPDATE products SET name='${name}',stock='${stock}',price='${price}',categorys_id='${categorys_id}',photo='${photo}',users_id='${users_id}' WHERE id='${id}'`);
-
-        Pool.query(`UPDATE users SET email='${email}',fullname='${fullname}',adress='${adress}',photo='${photo}',gender='${gender}',phoneNumber='${phoneNumber}' WHERE id = '${id}'`,(err,result)=>{
+        Pool.query(`UPDATE users SET email='${email}',fullname='${fullname}',adress='${adress}',photo='${photo}',gender='${gender}',phonenumber='${phonenumber}' WHERE id = '${id}'`,(err,result)=>{
             if(!err){
                 resolve(result)
             } else {
