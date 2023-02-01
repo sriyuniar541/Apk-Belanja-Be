@@ -1279,7 +1279,7 @@ Response 200
 
 ## Related Project
 * [`Backend Project Belanja `](https://github.com/sriyuniar541/Apk-Belanja-Be)
-* [`REST API Telegram`](https://light-clam-overalls.cyclic.app/)
+* [`REST API Belanja`](https://light-clam-overalls.cyclic.app/)
 
 ## Contact
   * Sri Yuniar [@sriyuniar541](https://github.com/sriyuniar541)
